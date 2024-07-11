@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    loadCurrencies(); // Cargar monedas al cargar la página
+    loadCurrencies();
 
     amountInput.addEventListener('input', (e) => {
         const value = e.target.value;
@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error('Error al obtener los datos de la API');
             }
-            const data = await response.json();  // Solo convertimos la respuesta a JSON una vez aquí
-            const rate = data.serie[0].valor;  // Tasa más reciente
+            const data = await response.json();
+            const rate = data.serie[0].valor;
 
             let convertedAmount;
             if (direction === "CLP_to_X") {
@@ -74,8 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultDiv.innerHTML = `Resultado: ${formatNumber(amount)} ${data.nombre} son ${formatNumber(convertedAmount)} CLP`;
             }
 
-            const labels = data.serie.slice(0, 10).map(item => item.fecha.split('T')[0]);
-            const values = data.serie.slice(0, 10).map(item => item.valor);
+            // Invertir los datos aquí para mostrar la fecha más reciente a la derecha
+            const labels = data.serie.map(item => item.fecha.split('T')[0]).reverse();
+            const values = data.serie.map(item => item.valor).reverse();
 
             if (chart) {
                 chart.destroy();
@@ -94,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     scales: {
                         y: {
                             beginAtZero: false
@@ -106,26 +109,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         }
     });
-});
-const ctx = document.getElementById('historyChart').getContext('2d');
-chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: `Historial últimos 10 días de ${data.nombre}`,
-            data: values,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,  // Asegura que el gráfico es responsivo
-        maintainAspectRatio: true,  // Mantiene la relación de aspecto
-        scales: {
-            y: {
-                beginAtZero: false
-            }
-        }
-    }
 });

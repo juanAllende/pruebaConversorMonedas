@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="assests/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Conversor de Monedas</h1>
@@ -23,15 +25,18 @@
         </div>
         <div class="form-group">
             <label for="amount">Cantidad:</label>
-            <input type="text" id="amount" placeholder="Ingrese cantidad"/>
+            <input type="text" id="amount" placeholder="Ingrese cantidad" />
         </div>
-        <button id="convert-btn">Convertir</button>
+        <div class="chart-container">
+            <button id="convert-btn">Convertir</button>
+        </div>
         <div id="result" class="result"></div>
         <div class="chart-container">
             <canvas id="historyChart"></canvas>
         </div>
-        
+
     </div>
     <script src="assests/js/main.js"></script>
 </body>
+
 </html>

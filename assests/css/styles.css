@@ -2,33 +2,36 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
 }
 
 .container {
+    padding: 20px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
 }
 
 h1 {
-    color: #333;
+    font-size: 1.75rem; /* Aumentar el tamaño del título */
+    color: #007bff;
     margin-bottom: 20px;
 }
 
 .form-group {
     width: 100%;
-    max-width: 360px;
-    margin-bottom: 10px;
+    max-width: 360px; /* Controla el ancho máximo para grandes pantallas */
+    margin-bottom: 15px;
 }
 
 .form-group label {
-    font-weight: bold;
+    font-size: 1rem; /* Aumenta el tamaño de la etiqueta */
     display: block;
     margin-bottom: 5px;
 }
@@ -36,23 +39,21 @@ h1 {
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 8px;
-    font-size: 16px;
+    padding: 12px; /* Aumenta el padding para mayor facilidad de toque */
+    font-size: 1rem; /* Aumenta el tamaño de fuente */
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
 button {
-    width: 100%;
-    max-width: 360px;
-    padding: 10px;
-    font-size: 16px;
-    color: white;
+    padding: 12px 20px;
+    font-size: 1.25rem; /* Aumentar el tamaño de la fuente para mejor visibilidad */
+    color: #fff;
     background-color: #007bff;
-    border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    width: 100%;
     cursor: pointer;
-    margin-top: 10px;
+    border: none;
 }
 
 button:hover {
@@ -60,36 +61,28 @@ button:hover {
 }
 
 .result {
+    font-size: 1.2rem; /* Aumentar el tamaño de la fuente de los resultados */
     margin-top: 20px;
-    font-size: 18px;
     color: #4a4a4a;
+}
+
+.chart-container {
+    width: 100%;
+    max-width: 360px;
+    height: 300px;
+    margin-top: 20px;
 }
 
 @media (max-width: 768px) {
     .container {
-        width: auto;
         padding: 10px;
     }
 
+    h1 {
+        font-size: 1.5rem; /* Ajustar el tamaño del título para pantallas muy pequeñas */
+    }
+
     .form-group {
-        width: auto;
-    }
-
-    button {
-        width: auto;
-    }
-}
-.chart-container {
-    position: relative;
-    margin: auto;
-    height: 400px;  /* Ajusta según la altura deseada */
-    width: 80vw;  /* Ajusta al 80% del ancho de la ventana */
-    max-width: 600px;  /* Asegura que no se vuelva demasiado grande en pantallas grandes */
-}
-
-@media (max-width: 768px) {
-    .chart-container {
-        width: 95vw;  /* Aumenta el ancho en pantallas pequeñas */
-        height: 300px;  /* Reduce la altura en pantallas pequeñas */
+        max-width: 100%; /* Asegura que los campos utilicen todo el ancho disponible */
     }
 }
