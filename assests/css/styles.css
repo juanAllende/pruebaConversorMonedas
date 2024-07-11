@@ -79,3 +79,17 @@ button:hover {
         width: auto;
     }
 }
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 400px;  /* Ajusta según la altura deseada */
+    width: 80vw;  /* Ajusta al 80% del ancho de la ventana */
+    max-width: 600px;  /* Asegura que no se vuelva demasiado grande en pantallas grandes */
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        width: 95vw;  /* Aumenta el ancho en pantallas pequeñas */
+        height: 300px;  /* Reduce la altura en pantallas pequeñas */
+    }
+}

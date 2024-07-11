@@ -107,3 +107,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+const ctx = document.getElementById('historyChart').getContext('2d');
+chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: `Historial últimos 10 días de ${data.nombre}`,
+            data: values,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,  // Asegura que el gráfico es responsivo
+        maintainAspectRatio: true,  // Mantiene la relación de aspecto
+        scales: {
+            y: {
+                beginAtZero: false
+            }
+        }
+    }
+});
