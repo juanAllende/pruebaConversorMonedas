@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.getElementById('convert-btn');
     const currencySelect = document.getElementById('currency');
     const resultDiv = document.getElementById('result');
+    const conversionDirectionSelect = document.getElementById('conversion-direction');
 
     // Función para formatear números con separador de miles
     function formatNumber(number) {
@@ -16,7 +17,29 @@ document.addEventListener('DOMContentLoaded', () => {
         return formattedNumber.replace(/\./g, '');
     }
 
-    // Evento para formatear el número a medida que se ingresa
+    // Carga todas las monedas disponibles desde la API
+    async function loadCurrencies() {
+        try {
+            const response = await fetch('https://mindicador.cl/api');
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos de la API');
+            }
+            const data = await response.json();
+            Object.keys(data).forEach(key => {
+                if (typeof data[key] === 'object' && data[key].codigo) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = data[key].nombre;
+                    currencySelect.appendChild(option);
+                }
+            });
+        } catch (error) {
+            console.error('Error al cargar las monedas:', error);
+        }
+    }
+
+    loadCurrencies(); // Cargar monedas al cargar la página
+
     amountInput.addEventListener('input', (e) => {
         const value = e.target.value;
         const unformattedValue = unformatNumber(value);
@@ -25,58 +48,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     convertButton.addEventListener('click', async () => {
-        let amount = amountInput.value;
+        let amount = unformatNumber(amountInput.value);
         const currency = currencySelect.value;
-
-        // Desformatear el número para obtener el valor original
-        amount = unformatNumber(amount);
+        const direction = conversionDirectionSelect.value;
 
         if (amount === '') {
             resultDiv.textContent = 'Por favor ingresa una cantidad.';
             return;
         }
 
-        // Mapeo de claves de moneda según la API
-        const currencyMap = {
-            usd: 'dolar',
-            eur: 'euro'
-            // Añade más mapeos según las monedas disponibles en la API
-        };
-
         try {
-            const response = await fetch('https://mindicador.cl/api');
+            const response = await fetch(`https://mindicador.cl/api/${currency}`);
             if (!response.ok) {
                 throw new Error('Error al obtener los datos de la API');
             }
-            const data = await response.json();
+            const data = await response.json();  // Solo convertimos la respuesta a JSON una vez aquí
+            const rate = data.serie[0].valor;  // Tasa más reciente
 
-            console.log('Datos de la API:', data); // Imprimir datos de la API para verificar estructura
-
-            const currencyKey = currencyMap[currency];
-            if (!data[currencyKey]) {
-                throw new Error(`No se encontraron datos para la moneda seleccionada: ${currency}`);
+            let convertedAmount;
+            if (direction === "CLP_to_X") {
+                convertedAmount = (amount / rate).toFixed(2);
+                resultDiv.innerHTML = `Resultado: ${formatNumber(amount)} CLP son ${formatNumber(convertedAmount)} ${data.nombre}`;
+            } else {
+                convertedAmount = (amount * rate).toFixed(2);
+                resultDiv.innerHTML = `Resultado: ${formatNumber(amount)} ${data.nombre} son ${formatNumber(convertedAmount)} CLP`;
             }
 
-            const rate = data[currencyKey].valor;
-            const convertedAmount = (amount / rate).toFixed(2);
-
-            resultDiv.innerHTML = `Resultado: ${formatNumber(amount)} CLP son ${formatNumber(convertedAmount)} ${currency.toUpperCase()}`;
-
-            const historyResponse = await fetch(`https://mindicador.cl/api/${currencyKey}`);
-            if (!historyResponse.ok) {
-                throw new Error('Error al obtener los datos del historial de la API');
-            }
-            const historyData = await historyResponse.json();
-
-            if (!historyData.serie) {
-                throw new Error('No se encontraron datos históricos para la moneda seleccionada');
-            }
-
-            const labels = historyData.serie.slice(0, 10).map(item => item.fecha.split('T')[0]);
-            const values = historyData.serie.slice(0, 10).map(item => item.valor);
+            const labels = data.serie.slice(0, 10).map(item => item.fecha.split('T')[0]);
+            const values = data.serie.slice(0, 10).map(item => item.valor);
 
             if (chart) {
-                chart.destroy(); // Destruir la gráfica anterior si existe
+                chart.destroy();
             }
 
             const ctx = document.getElementById('historyChart').getContext('2d');
@@ -85,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Historial últimos 10 días (${currency.toUpperCase()})`,
+                        label: `Historial últimos 10 días de ${data.nombre}`,
                         data: values,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1

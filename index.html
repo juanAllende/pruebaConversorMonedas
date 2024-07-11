@@ -5,27 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversor de Monedas</title>
     <link rel="stylesheet" href="/assests/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Conversor de Monedas</h1>
         <div class="form-group">
-            <label for="amount">Cantidad:</label>
-            <input type="text" id="amount" />
+            <label for="conversion-direction">Dirección de Conversión:</label>
+            <select id="conversion-direction">
+                <option value="CLP_to_X">De CLP a Moneda</option>
+                <option value="X_to_CLP">De Moneda a CLP</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="currency">Moneda:</label>
-            <select id="currency">
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <!-- Añade más opciones según sea necesario -->
-            </select>
+            <select id="currency"></select>
+        </div>
+        <div class="form-group">
+            <label for="amount">Cantidad:</label>
+            <input type="text" id="amount" placeholder="Ingrese cantidad"/>
         </div>
         <button id="convert-btn">Convertir</button>
-        <div id="result"></div>
+        <div id="result" class="result"></div>
         <canvas id="historyChart"></canvas>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/assests/js/main.js"></script>
 </body>
 </html>
